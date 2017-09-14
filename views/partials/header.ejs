@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>YelpCamp</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="/stylesheet/main.css">
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+<!-- NAVBAR -->
+<nav class="navbar navbar-default">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<!--<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navdemo" aria-expanded="false">-->
+	  <!--      <span class="sr-only">Toggle navigation</span>-->
+	  <!--      <span class="icon-bar"></span>-->
+	  <!--      <span class="icon-bar"></span>-->
+	  <!--      <span class="icon-bar"></span>-->
+	  <!--    </button>-->
+			<a class="navbar-brand" href="/campgrounds"><span class="glyphicon glyphicon-tent" aria-hidden="true"></span> YelpCamp</a>
+		</div>
+
+	<div class="collapse navbar-collapse">
+	<!--	<div class="nav navbar-nav">-->
+	<!--		<li><a href="#">About</a></li>-->
+	<!--		<li><a href="#">Contact</a></li>-->
+	<!--	</div>	-->
+
+		<ul class="nav navbar-nav navbar-right">
+			<% if(!currentUser){ %>
+			<li><a href="/login">Login</a></li>
+			<li><a href="/register">Sign Up</a></li>
+			<% }else{ %>
+			<li><a>Signed in as: <%=currentUser.username%></a></li>
+			<li><a href="/logout">Log Out</a></li>
+			<% } %>
+		</ul>
+	</div>
+
+	</div>
+</nav>
+
+<div class="container">
+	<% if(error && error.length>0){%>
+	    <div class="alert alert-danger fade in alert-dismissable">
+	       <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+	       <%= error %>
+	     </div>
+	<%} else if (success && success.length>0){ %>
+   		<div class="alert alert-success fade in alert-dismissable">
+	       <a href="#" class="close" data-dismiss="alert" aria-label="close" title="close">×</a>
+	       <%= success %>
+	   </div>
+  <%}%>
