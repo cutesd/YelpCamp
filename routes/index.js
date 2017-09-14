@@ -36,7 +36,7 @@ router.get("/login", function(req, res) {
 // LogIn CREATE
 router.post('/login', passport.authenticate("local", {
     successRedirect: "/campgrounds",
-    failureRedirect: "/login"
+    failureRedirect: "/register"
 }), function(req, res) {});
 
 // LogOut SHOW
