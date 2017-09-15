@@ -22,9 +22,6 @@ console.log(process.env.DATABASEURL);
 // DB CONFIG
 mongoose.Promise = global.Promise;
 mongoose.connect(process.env.DATABASEURL, { useMongoClient: true });
-//mongoose.connect("mongodb://localhost/yelp_camp", { useMongoClient: true });
-//mongoose.connect("mongodb://KC:ESCUARF@ds135514.mlab.com:35514/yelp_camp", { useMongoClient: true });
-
 
 // APP CONFIG
 var app = express();
