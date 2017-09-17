@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var geocoder = require('geocoder');
 var Camp = require('../models/camp');
 var Comment = require('../models/comment');
 var middleware = require('../middleware');
@@ -17,7 +18,7 @@ router.get("/", function(req, res) {
 });
 
 // Campgrounds CREATE
-router.post("/", middleware.isLoggedIn, function(req, res) {
+router.post("/", [middleware.isLoggedIn, geocode], function(req, res) {
     // get data from form & add to campgrounds arr
     var author = {
         id: req.user._id,
@@ -28,8 +29,11 @@ router.post("/", middleware.isLoggedIn, function(req, res) {
         image: req.body.img,
         desc: req.body.desc,
         price: req.body.price,
+        location: geoObj,
         author: author
     };
+    console.log(newCamp.location);
+    console.log(newCamp.location.lat, newCamp.location.lng, newCamp.location.address);
     Camp.create(newCamp, function(err, db) {
         if (err) {
             req.flash("error", err.message);
@@ -110,7 +114,21 @@ router.delete("/:id", middleware.isAuthCamp, function(req, res) {
         }
     });
 });
+var geoObj = {};
 
+function geocode(req, res, next) {
+    geocoder.geocode(req.body.loc, function(err, data) {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            geoObj.lat = data.results[0].geometry.location.lat;
+            geoObj.lng = data.results[0].geometry.location.lng;
+            geoObj.address = data.results[0].formatted_address;
+            next();
+        }
+    });
+}
 
 
 module.exports = router;
