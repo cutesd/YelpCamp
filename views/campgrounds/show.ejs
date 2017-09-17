@@ -57,30 +57,29 @@
     </div>
 </div>
 
-
-
 <script>
-  function initMap() {
-    var loc = {lat: <%= camp.location.lat %>, lng: <%= camp.location.lng %>};
-    var map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 8,
-      center: loc,
-      scrollwheel: false
-    });
-    var contentString="<strong><%= camp.name %><br />
-    <%= camp.location.address %></strong>
-    <p><%= camp.desc %></p>"
-    
-    var infowindow = new google.maps.InfoWindow({content:contentString});
-    
-    var marker = new google.maps.Marker({
-      position: loc,
-      map: map
-    });
-  }
-</script>
-<script async defer
-src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAVfjak2UHCSrHZDHtz09_QMPuXFM2hhxg&callback=initMap">
-</script>
+      function initMap() {
+        var loc = {lat: <%= camp.location.lat %>, lng: <%=camp.location.lng %>};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 8,
+          center: loc,
+          scrollwheel: false
+        });
+        var infowindow = new google.maps.InfoWindow({
+            content: "<strong><%= camp.name %><br><%= camp.location.address %></strong><p><%= camp.desc %></p>"
+        });
+        var marker = new google.maps.Marker({
+          position: loc,
+          map: map
+        });
+        marker.addListener('click',function(){
+           infowindow.open(map,marker); 
+        });
+      }
+    </script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDrlESyf6nGoylUPsrRQDvv7iZK2Gh6q2g&callback=initMap">
+    </script>
+
 
 <%include ../partials/footer %>
