@@ -32,8 +32,6 @@ router.post("/", [middleware.isLoggedIn, geocode], function(req, res) {
         location: geoObj,
         author: author
     };
-    console.log(newCamp.location);
-    console.log(newCamp.location.lat, newCamp.location.lng, newCamp.location.address);
     Camp.create(newCamp, function(err, db) {
         if (err) {
             req.flash("error", err.message);
@@ -87,9 +85,11 @@ router.get("/:id/edit", middleware.isAuthCamp, function(req, res) {
 });
 
 // Campgrounds UPDATE
-router.put("/:id", middleware.isAuthCamp, function(req, res) {
-    req.body.camp.name = middleware.capitalize(req.body.camp.name);
-    Camp.findByIdAndUpdate(req.params.id, req.body.camp, function(err, found) {
+router.put("/:id", [middleware.isAuthCamp, geocode], function(req, res) {
+    var newCamp = req.body.camp;
+    newCamp.name = middleware.capitalize(newCamp.name);
+    newCamp.location = geoObj;
+    Camp.findByIdAndUpdate(req.params.id, newCamp, function(err, found) {
         if (err) {
             req.flash("error", err.message);
             res.redirect("/campgrounds");
@@ -114,6 +114,7 @@ router.delete("/:id", middleware.isAuthCamp, function(req, res) {
         }
     });
 });
+
 var geoObj = {};
 
 function geocode(req, res, next) {
