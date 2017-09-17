@@ -11,14 +11,14 @@ router.get("/", function(req, res) {
 // ========== AUTH ==================//
 // Register SHOW
 router.get("/register", function(req, res) {
-    res.render('register');
+    res.render('register', { page: 'register' });
 });
 
 // Register CREATE
 router.post("/register", function(req, res) {
     User.register(new User({ username: req.body.username }), req.body.password, function(err, user) {
         if (err) {
-            return res.render('register', { error: err.message });
+            return res.render('register', { page: 'register', error: err.message });
         }
         // authenticate using local strategy
         passport.authenticate("local")(req, res, function() {
@@ -30,7 +30,7 @@ router.post("/register", function(req, res) {
 
 // LogIn SHOW
 router.get("/login", function(req, res) {
-    res.render('login');
+    res.render('login', { page: 'login' });
 });
 
 // LogIn CREATE

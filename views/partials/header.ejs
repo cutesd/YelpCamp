@@ -2,39 +2,47 @@
 <html>
 <head>
 	<title>YelpCamp</title>
-	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="/stylesheet/main.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-	 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 <body>
 <!-- NAVBAR -->
 <nav class="navbar navbar-default">
-	<div class="container-fluid">
+	<div class="container">
 		<div class="navbar-header">
-			<!--<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-navdemo" aria-expanded="false">-->
-	  <!--      <span class="sr-only">Toggle navigation</span>-->
-	  <!--      <span class="icon-bar"></span>-->
-	  <!--      <span class="icon-bar"></span>-->
-	  <!--      <span class="icon-bar"></span>-->
-	  <!--    </button>-->
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+	        <span class="sr-only">Toggle navigation</span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	        <span class="icon-bar"></span>
+	      </button>
 			<a class="navbar-brand" href="/campgrounds"><span class="glyphicon glyphicon-tent" aria-hidden="true"></span> YelpCamp</a>
 		</div>
 
-	<div class="collapse navbar-collapse">
-	<!--	<div class="nav navbar-nav">-->
-	<!--		<li><a href="#">About</a></li>-->
-	<!--		<li><a href="#">Contact</a></li>-->
-	<!--	</div>	-->
+	<div class="collapse navbar-collapse" id="navbar">
+		<div class="nav navbar-nav">
+			<li class="nav-item <%= (typeof page !== 'undefined' && page === 'campgrounds') ? 'active' : '' %>">
+				<a href="/campgrounds" class="nav-link ">Campgrounds</a>
+			</li>
+		</div>	
 
 		<ul class="nav navbar-nav navbar-right">
 			<% if(!currentUser){ %>
-			<li><a href="/login">Login</a></li>
-			<li><a href="/register">Sign Up</a></li>
+			<li class="nav-item <%= (typeof page !== 'undefined' && page === 'login') ? 'active' : '' %>">
+				<a href="/login" class="nav-link">Login</a>
+			</li>
+			<li class="nav-item <%= (typeof page !== 'undefined' && page === 'register') ? 'active' : '' %>">
+				<a href="/register" class="nav-link">Sign Up</a>
+			</li>
 			<% }else{ %>
-			<li><a>Signed in as: <%=currentUser.username%></a></li>
-			<li><a href="/logout">Log Out</a></li>
+			<li class="nav-item">
+				<a>Signed in as: <%=currentUser.username%></a>
+				</li>
+			<li class="nav-item">
+				<a href="/logout" class="class-link">Log Out</a>
+			</li>
 			<% } %>
 		</ul>
 	</div>
@@ -54,3 +62,5 @@
 	       <%= success %>
 	   </div>
   <%}%>
+  </div>
+  <div class="container">
