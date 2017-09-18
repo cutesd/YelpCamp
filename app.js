@@ -33,6 +33,8 @@ app.use(exSanitizer());
 app.use(flash());
 app.set('view engine', 'ejs');
 // SEED THE DB //seedDB();
+app.locals.moment = require('moment');
+
 
 // PASSPORT CONFIG
 app.use(require("express-session")({
@@ -53,6 +55,7 @@ app.use(function(req, res, next) {
     res.locals.success = req.flash("success");
     next();
 });
+
 
 // USE ROUTES
 app.use("/", indexRoutes);

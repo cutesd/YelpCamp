@@ -16,7 +16,10 @@ router.get("/register", function(req, res) {
 
 // Register CREATE
 router.post("/register", function(req, res) {
-    User.register(new User({ username: req.body.username }), req.body.password, function(err, user) {
+    User.register(new User({
+        username: req.body.username,
+        isAdmin: (req.body.admincode === "spunkycoconut") ? true : false
+    }), req.body.password, function(err, user) {
         if (err) {
             return res.render('register', { page: 'register', error: err.message });
         }

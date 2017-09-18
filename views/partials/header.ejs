@@ -38,7 +38,9 @@
 			</li>
 			<% }else{ %>
 			<li class="nav-item">
-				<a>Signed in as: <%=currentUser.username%></a>
+				<a>
+					<% if(currentUser.isAdmin){ %> <strong>ADMIN</strong> <% } %>
+					Signed in as: <%=currentUser.username%></a>
 				</li>
 			<li class="nav-item">
 				<a href="/logout" class="class-link">Log Out</a>

@@ -24,7 +24,7 @@ middlewareObj.isAuthCamp = function(req, res, next) {
                     return res.redirect("back");
                 }
                 //
-                if (found.author.id.equals(req.user._id)) {
+                if (found.author.id.equals(req.user._id) || req.user.isAdmin) {
                     next();
                 }
                 else {
@@ -54,7 +54,7 @@ middlewareObj.isAuthComment = function(req, res, next) {
                         return res.redirect("back");
                     }
                     //
-                    if (found.author.id.equals(req.user._id)) {
+                    if (found.author.id.equals(req.user._id) || req.user.isAdmin) {
                         next();
                     }
                     else {

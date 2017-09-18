@@ -10,6 +10,10 @@ var campSchema = new mongoose.Schema({
         lng: Number,
         address: String
     },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    },
     author: {
         id: {
             type: mongoose.Schema.Types.ObjectId,
