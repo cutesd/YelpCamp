@@ -3,9 +3,10 @@ var express = require('express'),
 var Camp = require('../models/camp'),
     Comment = require('../models/comment'),
     middleware = require('../middleware');
+const { isLoggedIn, isAuthComment, isAdmin } = middleware;
 
 // Comment NEW 
-router.get("/new", middleware.isLoggedIn, function(req, res) {
+router.get("/new", isLoggedIn, function(req, res) {
     Camp.findById(req.params.id).populate("comments").exec(function(err, found) {
         if (err)
             res.render('back', { error: err.message });
@@ -16,7 +17,7 @@ router.get("/new", middleware.isLoggedIn, function(req, res) {
 });
 
 // Comments CREATE
-router.post("/", middleware.isLoggedIn, function(req, res) {
+router.post("/", isLoggedIn, function(req, res) {
     // get data from form & add to comments
     Camp.findById(req.params.id, function(err, found) {
         if (err) {
@@ -46,7 +47,7 @@ router.post("/", middleware.isLoggedIn, function(req, res) {
 });
 
 // Comment EDIT
-router.get("/:comment_id/edit", middleware.isAuthComment, function(req, res) {
+router.get("/:comment_id/edit", isLoggedIn, isAuthComment, function(req, res) {
     Comment.findById(req.params.comment_id, function(err, found) {
         if (err) {
             req.flash("error", err.message);
@@ -63,7 +64,7 @@ router.get("/:comment_id/edit", middleware.isAuthComment, function(req, res) {
 });
 
 // Comment UPDATE
-router.put("/:comment_id", middleware.isAuthComment, function(req, res) {
+router.put("/:comment_id", isLoggedIn, isAuthComment, function(req, res) {
     Comment.findByIdAndUpdate(req.params.comment_id, req.body.comment, function(err, found) {
         if (err) {
             req.flash("error", err.message);
@@ -77,15 +78,25 @@ router.put("/:comment_id", middleware.isAuthComment, function(req, res) {
 });
 
 // Comment DESTROY
-router.delete("/:comment_id", middleware.isAuthComment, function(req, res) {
+router.delete("/:comment_id", isLoggedIn, isAuthComment, function(req, res) {
     Comment.findByIdAndRemove(req.params.comment_id, function(err) {
         if (err) {
             req.flash("error", err.message);
             res.redirect("back");
         }
         else {
-            req.flash("success", "Comment deleted!");
-            res.redirect("/campgrounds/" + req.params.id);
+            Camp.findByIdAndUpdate(req.params.id, { $pull: { comments: req.params.comment_id } }, function(err, data) {
+                if (err || !data) {
+                    console.log(err);
+                    req.flash("error", err.message);
+                    res.redirect("back");
+                }
+                else {
+                    req.flash("success", "Comment deleted!");
+                    res.redirect("/campgrounds/" + req.params.id);
+                }
+            });
+
         }
     });
 });
