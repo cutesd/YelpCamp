@@ -1,39 +1,41 @@
 var express = require('express'),
+    app = express(),
     parser = require("body-parser"),
     mongoose = require("mongoose"),
-    flash = require('connect-flash'),
     passport = require('passport'),
+    cookieParser = require('cookie-parser'),
     LocalStrategy = require('passport-local'),
-    goosepass = require('passport-local-mongoose'),
-    methodor = require('method-override'),
-    exSanitizer = require('express-sanitizer'),
+    flash = require('connect-flash'),
     Camp = require('./models/camp'),
     Comment = require('./models/comment'),
     User = require('./models/user'),
-    seedDB = require('./seeds');
+    seedDB = require('./seeds'),
+    methodor = require('method-override');
 
-// ROUTES
+// config dotenv
+require('dotenv').load();
+
+// routes
 var commentRoutes = require('./routes/comments'),
     campgroundRoutes = require('./routes/campgrounds'),
     indexRoutes = require('./routes/index');
 
-console.log(process.env.DATABASEURL);
-
-// DB CONFIG
+// database
 mongoose.Promise = global.Promise;
-mongoose.connect(process.env.DATABASEURL, { useMongoClient: true });
+mongoose.connect(process.env.DATABASEURL, { useMongoClient: true })
+    .then(() => console.log(process.env.DATABASEURL + ': Database connected'))
+    .catch(err => console.log('Database connection error: ${err.message}'));
 
-// APP CONFIG
-var app = express();
+// app config
 app.use(parser.urlencoded({ extended: true }));
-app.use(express.static(__dirname + "/public"));
-app.use(parser.urlencoded({ extended: true }));
-app.use(methodor("_method"));
-app.use(exSanitizer());
-app.use(flash());
 app.set('view engine', 'ejs');
-// SEED THE DB //seedDB();
+app.use(express.static(__dirname + "/public"));
+app.use(methodor("_method"));
+app.use(cookieParser('secret'));
+
+// require moment
 app.locals.moment = require('moment');
+//seedDB();// seed the database
 
 
 // PASSPORT CONFIG
@@ -43,6 +45,8 @@ app.use(require("express-session")({
     resave: false,
     saveUninitialized: false
 }));
+
+app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
@@ -57,11 +61,9 @@ app.use(function(req, res, next) {
 });
 
 
-// USE ROUTES
 app.use("/", indexRoutes);
 app.use("/campgrounds", campgroundRoutes);
 app.use("/campgrounds/:id/comments", commentRoutes);
-
 
 
 // 

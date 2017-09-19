@@ -4,19 +4,38 @@ var geocoder = require('geocoder');
 var Camp = require('../models/camp');
 var Comment = require('../models/comment');
 var middleware = require('../middleware');
-const { isLoggedIn, isAuthCamp, isAuthComment, isAdmin, isSafe } = middleware;
+var { isLoggedIn, isAuthCamp, isAuthComment, isAdmin, isSafe } = middleware;
+
+// Define escapeRegex function for search feature
+function escapeRegex(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+};
 
 // Campgrounds INDEX
 router.get("/", function(req, res) {
-    Camp.find({}, function(err, db) {
-        if (err || !db) {
-            console.log(err);
-            req.flash("error", err.message);
-            res.redirect("back");
-        }
-        else
-            res.render("campgrounds/index", { page: 'campgrounds', campgrounds: db, currentUser: req.user });
-    });
+    if (req.query.search && req.xhr) {
+        const regex = new RegExp(escapeRegex(req.query.search), 'gi');
+        // Get all campgrounds from DB
+        Camp.find({ name: regex }, function(err, found) {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                res.status(200).json(found);
+            }
+        });
+    }
+    else {
+        Camp.find({}, function(err, db) {
+            if (err || !db) {
+                console.log(err);
+                req.flash("error", err.message);
+                res.redirect("back");
+            }
+            else
+                res.render("campgrounds/index", { page: 'campgrounds', campgrounds: db, currentUser: req.user });
+        });
+    }
 });
 
 // Campgrounds CREATE
